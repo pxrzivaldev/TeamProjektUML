@@ -1,5 +1,4 @@
 @startuml
-
 :Suchender:
 :Helfer:
 
@@ -9,6 +8,7 @@ rectangle FreiwilligenKoordinierung {
     Helfer --> (Benachrichtigungen erhalten)
     Helfer --> (Profil bearbeiten)
     Helfer --> (Anfrage zusagen)
+    (Helfer anfragen) --> (Anzeige erstellen):<<include>>
 }
 
 
