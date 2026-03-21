@@ -2,13 +2,15 @@
 :Suchender:
 :Helfer:
 
+left to right direction
+
 rectangle FreiwilligenKoordinierung {
     Suchender ---> (Anzeige erstellen)
     Suchender ---> (Benachrichtigungen erhalten)
     Helfer --> (Benachrichtigungen erhalten)
     Helfer --> (Profil bearbeiten)
     Helfer --> (Anfrage zusagen)
-    (Helfer anfragen) --> (Anzeige erstellen):<<include>>
+    (Anzeige erstellen) --> (Helfer anfragen):<<include>>
 }
 
 
