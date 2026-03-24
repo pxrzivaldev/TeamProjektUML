@@ -11,15 +11,13 @@ rectangle FreiwilligenKoordinierung {
     Helfer --> (Benachrichtigungen erhalten)
     Helfer --> (Profil verwalten)
     Helfer --> (Anfrage zusagen)
-    
+
     (Anfrage zusagen) --> (Benachrichtigungen erhalten) : <<include>>
     (Anzeige erstellen) --> (Helfer anfragen):<<include>>
 
-    Admin --> (Anzeige prüfen)
     Admin --> (Nutzer verwalten)
     Admin --> (Inhalte moderieren)
 
-    (Anzeige erstellen) --> (Anzeige prüfen) : <<include>>
 }
 
 
