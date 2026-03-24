@@ -1,6 +1,7 @@
 @startuml
 :Suchender:
 :Helfer:
+:Admin:
 
 left to right direction
 
@@ -8,8 +9,10 @@ rectangle FreiwilligenKoordinierung {
     Suchender ---> (Anzeige erstellen)
     Suchender ---> (Benachrichtigungen erhalten)
     Helfer --> (Benachrichtigungen erhalten)
-    Helfer --> (Profil bearbeiten)
+    Helfer --> (Profil verwalten)
     Helfer --> (Anfrage zusagen)
+    
+    (Anfrage zusagen) --> (Benachrichtigungen erhalten) : <<include>>
     (Anzeige erstellen) --> (Helfer anfragen):<<include>>
 
     Admin --> (Anzeige prüfen)
