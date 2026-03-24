@@ -1,4 +1,5 @@
 @startuml
+
 :Suchender:
 :Helfer:
 :Admin:
@@ -6,20 +7,18 @@
 left to right direction
 
 rectangle FreiwilligenKoordinierung {
+
     Suchender ---> (Anzeige erstellen)
     Suchender ---> (Benachrichtigungen erhalten)
     Helfer --> (Benachrichtigungen erhalten)
     Helfer --> (Profil verwalten)
     Helfer --> (Anfrage zusagen)
 
-    (Anfrage zusagen) --> (Benachrichtigungen erhalten) : <<include>>
     (Anzeige erstellen) --> (Helfer anfragen):<<include>>
 
     Admin --> (Nutzer verwalten)
     Admin --> (Inhalte moderieren)
 
 }
-
-
 
 @enduml
