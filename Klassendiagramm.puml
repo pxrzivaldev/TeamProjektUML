@@ -1,0 +1,38 @@
+@startuml
+
+class Benachrichtigung {
+  - id: UUID
+  - nachricht: String
+  - gelesen: boolean
+  + senden()
+  + markierenAlsGelesen()
+}
+
+User "1" -- "*" Benachrichtigung
+
+class Gui {
+  - currentUser : User
+  - zuordnungsService: ZuordnungsService
+  + zeigeGesuche()
+  + zeigeAngebote()
+  + zeigeBenachrichtigungen()
+  + updateView()
+}
+
+class ZuordnungsService {
+  - angebote : List<Hilfsangebot>
+  - gesuche : List<Hilfsgesuch>
+  + match(gesuch: Hilfsgesuch)
+  + match(angebot: Hilfsangebot)
+  + weiseHelferZu()
+  + faehigkeitenMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
+  + ortRadiusMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch, radiusKm: double): boolean
+  + zeitMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
+  + berechneDistanz(a1: Adresse, a2: Adresse): double
+}
+
+Gui --> ZuordnungsService
+ZuordnungsService --> Hilfsgesuch
+ZuordnungsService --> Hilfsangebot
+
+@enduml
