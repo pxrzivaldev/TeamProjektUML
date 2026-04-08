@@ -8,16 +8,71 @@ class Benachrichtigung {
   + markierenAlsGelesen()
 }
 
+enum Reapeating {
+    DAILY
+    WEEKLY
+    MONTHLY
+    YEARLY
+}
+
+class Zeitraum {
+    - startZeit: localeDateTime
+    - endZeit: localDateTime
+    - repeating: Reapeating
+    + ueberschneidung(): boolean
+}
+
+class Kalender {
+    - List<Zeitraum>
+}
+
 User "1" -- "*" Benachrichtigung
 
 class Gui {
-  - currentUser : User
+  - currentUser: User
   - zuordnungsService: ZuordnungsService
-  + zeigeGesuche()
-  + zeigeAngebote()
-  + zeigeBenachrichtigungen()
-  + updateView()
+  + start()
+  + navigateTo(viewName: String)
 }
+
+class GesuchListeView {
+  + ladeGesuche()
+  + filtereGesuche()
+  + zeigeDetails(id)
+}
+
+class GesuchDetailView {
+  - aktuellesGesuch: Hilfsgesuch
+  + anzeigen()
+  + bewerben()
+  + bearbeiten()
+}
+
+class AngebotErstellenView {
+  + eingabenValidieren()
+  + angebotAbsenden()
+}
+
+class DashboardView {
+  + zeigeMeineGesuche()
+  + zeigeMeineAngebote()
+}
+
+class BenachrichtigungsView {
+  + ladeBenachrichtigungen()
+}
+
+class ProfilView {
+  + anzeigen()
+  + bearbeiten()
+}
+
+Gui --> GesuchListeView
+Gui --> DashboardView
+Gui --> BenachrichtigungsView
+Gui --> ProfilView
+GesuchListeView --> GesuchDetailView
+GesuchDetailView --> AngebotErstellenView
 
 class ZuordnungsService {
   - angebote : List<Hilfsangebot>
