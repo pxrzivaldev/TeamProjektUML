@@ -1,5 +1,45 @@
 @startuml
 
+- class Adresse {
+- Land : String
+- Stadt : String
+- Plz : int
+- Straße : String
+- Hausnr : int
+- longitude : double 
+- latitude : double
+} 
+
+class Hilfsgesuch {
+- AnzGesuchteHelfer : int
+- ListeHelfer : int[]
+- Status : boolean
++ addHelfer(int)
++ getStatus() boolean
+}
+
+class Hilfsangebot {
+- Zeiten : Zeitraum[]
+- Skills : Skills[]
++ addZeit(datetime)
++ deleteZeit(datetime)
++ getalleZeiten() Datetime[]
+}
+
+class Zeitraum {
+- startzeit : datetime
+- endzeit : datetime
++ getstartzeit()
++ getendzeit()
+}
+
+enum Skills{
+  informatik
+  elektrik
+  maschienenbau
+  stärke
+}
+
 class Benachrichtigung {
   - id: UUID
   - nachricht: String
@@ -9,21 +49,21 @@ class Benachrichtigung {
 }
 
 enum Reapeating {
-    DAILY
-    WEEKLY
-    MONTHLY
-    YEARLY
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
 }
 
 class Zeitraum {
-    - startZeit: localeDateTime
-    - endZeit: localDateTime
-    - repeating: Reapeating
-    + ueberschneidung(): boolean
+  - startZeit: localeDateTime
+  - endZeit: localDateTime
+  - repeating: Reapeating
+  + ueberschneidung(): boolean
 }
 
 class Kalender {
-    - List<Zeitraum>
+  - List<Zeitraum>
 }
 
 User "1" -- "*" Benachrichtigung
