@@ -1,6 +1,33 @@
 @startuml
 
-- class Adresse {
+class User {
+  - id : String
+  - name : String
+  - email : String
+  - adresse : Adresse
+}
+
+class Benutzer {
+- skills : Skill[]
++ profilBearbeiten()
++ profilLöschen()
+}
+
+class Admin {
+- rechte : Rechte[]
++ nutzerBannen(id : String)
+}
+
+enum Rechte {
+  Benutzerverwaltung
+  Rollenverwaltung
+  Inhaltsmoderation
+}
+
+User <|-- Benutzer
+User <|-- Admin
+
+class Adresse {
 - Land : String
 - Stadt : String
 - Plz : int
