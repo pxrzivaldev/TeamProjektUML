@@ -6,9 +6,9 @@ class User {
   - email : String
   - adresse : Adresse
   - passwort : String
-  + profilErstellen()
-  + profilBearbeiten()
-  + profilLöschen()
+  + profilErstellen(email : String, passwort : String):boolean
+  + profilBearbeiten():boolean
+  + profilLöschen():boolean
   + userMelden(userId : String): Report
 }
 
@@ -16,25 +16,25 @@ class Helfer {
   - aktuelleTeilnahmen : Hilfsgesuch[]
   - erreichbarkeitsZeitraum : Kalender
   - skills : Skills[]
-  + aufGesuchBewerben(gesuchID : String)
-  + zeitraumAnpassen()
-  + teilnahmeZurückziehen()
+  + aufGesuchBewerben(gesuchID : String): boolean
+  + zeitraumAnpassen():boolean
+  + teilnahmeZurückziehen():boolean
 }
 
 class Suchender {
   - organisation : String
   - gesuche : Hilfsgesuch[]
-  + gesuchErstellen()
-  + benachrichtigungVerschicken()
-  + helferAnnehmen()
-  + helferAblehnen()
+  + gesuchErstellen(beschreibung : String, anzahlGesuchteHelfer : int):Hilfsgesuch
+  + benachrichtigungVerschicken(nachricht : String):Benachrichtigung
+  + helferAnnehmen():boolean
+  + helferAblehnen():boolean
 }
 
 class Admin {
   - gemeldeteInhalte : Report[]
   - rechte : Rechte[]
-  + nutzerSperren(userID : String)
-  + nutzerEntsperren(userID : String)
+  + nutzerSperren(userID : String):boolean
+  + nutzerEntsperren(userID : String):boolean
 }
 
 class Report {
@@ -85,6 +85,7 @@ abstract class HilfeEintrag {
 }
 
 class Hilfsgesuch {
+  - beschreibung : String
   - anzahlGesuchteHelfer : int
   - helferListe : List<Helfer>
   - status : Status
