@@ -15,7 +15,7 @@ class User {
 class Helfer {
   - aktuelleTeilnahmen : Hilfsgesuch[]
   - erreichbarkeitsZeitraum : Kalender
-  - skills : Skill[]
+  - skills : Skills[]
   + aufGesuchBewerben(gesuchID : String)
   + zeitraumAnpassen()
   + teilnahmeZurückziehen()
@@ -45,8 +45,11 @@ class Report {
   - erstelltAm : DateTime
 }
 
+Report --> User : gemeldeter
+Report --> User : meldender
+
 enum Rechte {
-  BENUTZERVERWALTUNG
+  USERERWALTUNG
   ROLLENVERWALTUNG
   INHALTSMODERATION
 }
@@ -72,25 +75,33 @@ enum Status {
   ABGEBROCHEN
 }
 
+abstract class HilfeEintrag {
+  - id : String
+  - zeitraeume : List<Zeitraum>
+  - adresse : Adresse
+  - skills : List<Skills>
+  + addZeitraum(zeitraum : Zeitraum) : boolean
+  + removeZeitraum(zeitraum : Zeitraum): boolean
+}
+
 class Hilfsgesuch {
-  - gesuchID : String
   - anzahlGesuchteHelfer : int
-  - helferListe : List<Benutzer>
-  - adresse: Adresse
+  - helferListe : List<Helfer>
   - status : Status
-  + addHelfer(helfer : Benutzer) : boolean
+  + addHelfer(helfer : Helfer) : boolean
   + getStatus() : Status
   + isFilled() : boolean
 }
 
+Suchender "1" -- "*" Hilfsgesuch
+HilfeEintrag <|-- Hilfsgesuch
+
 class Hilfsangebot {
-  - zeitraeume : List<Zeitraum>
-  - user : User
-  - skills : List<Skills>
-  + addZeitraum(zeitraum : Zeitraum) : boolean
-  + removeZeitraum(zeitraum : Zeitraum): boolean
-  + getAlleZeitraeume() : List<Zeitraum>
+  - helfer : Helfer
 }
+
+Helfer "1" -- "*" Hilfsangebot
+HilfeEintrag <|-- Hilfsangebot
 
 enum Wiederholung {
   DAILY
@@ -107,10 +118,19 @@ class Zeitraum {
 }
 
 enum Skills {
-  informatik
-  elektrik
-  maschienenbau
-  stärke
+  TRAGEN_HEBEN
+  AUFRAEUMARBEITEN
+  TECHNISCHE_HILFE
+  STROMVERSORGUNG
+  PUMPEN_BEDIENEN
+  MATERIALVERTEILUNG
+  TRANSPORT
+  ERSTE_HILFE
+  SANITAETSDIENST
+  BETREUUNG_VON_PERSONEN
+  UNTERKUNFTSBETRIEB
+  FUNK_KOMMUNIKATION
+  KOORDINATION_UNTERSTUETZUNG
 }
 
 class Benachrichtigung {
@@ -139,8 +159,8 @@ class Gui {
 class ZuordnungsService {
   - angebote : List<Hilfsangebot>
   - gesuche : List<Hilfsgesuch>
-  + match(gesuch: Hilfsgesuch)
-  + match(angebot: Hilfsangebot)
+  + match(gesuch: Hilfsgesuch) : Hilfsangebot[]
+  + match(angebot: Hilfsangebot) : Hilfsgesuch[]
   + weiseHelferZu(gesuch : Hilfsgesuch, angebot: Hilfsangebot) : boolean
   + faehigkeitenMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
   + ortRadiusMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch, radiusKm: double): boolean
