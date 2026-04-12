@@ -19,48 +19,65 @@ class Admin {
 }
 
 enum Rechte {
-  Benutzerverwaltung
-  Rollenverwaltung
-  Inhaltsmoderation
+  BENUTZERVERWALTUNG
+  ROLLENVERWALTUNG
+  INHALTSMODERATION
 }
 
 User <|-- Benutzer
 User <|-- Admin
 
 class Adresse {
-- Land : String
-- Stadt : String
-- Plz : int
-- Straße : String
-- Hausnr : int
-- longitude : double 
-- latitude : double
-} 
+  - land : String
+  - stadt : String
+  - plz : String
+  - strasse : String
+  - hausnummer : String
+  - longitude : double
+  - latitude : double
+}
+
+enum Status {
+  OFFEN
+  IN_BEARBEITUNG
+  ERFUELLT
+  ABGEBROCHEN
+}
 
 class Hilfsgesuch {
-- AnzGesuchteHelfer : int
-- ListeHelfer : int[]
-- Status : boolean
-+ addHelfer(int)
-+ getStatus() boolean
+  - anzahlGesuchteHelfer : int
+  - helferListe : List<Benutzer>
+  - adresse: Adresse
+  - status : Status
+  + addHelfer(helfer : Benutzer) : boolean
+  + getStatus() : Status
+  + isFilled() : boolean
 }
 
 class Hilfsangebot {
-- Zeiten : Zeitraum[]
-- Skills : Skills[]
-+ addZeit(datetime)
-+ deleteZeit(datetime)
-+ getalleZeiten() Datetime[]
+  - zeitraeume : List<Zeitraum>
+  - user : User
+  - skills : List<Skills>
+  + addZeitraum(zeitraum : Zeitraum) : boolean
+  + removeZeitraum(zeitraum : Zeitraum): boolean
+  + getAlleZeitraeume() : List<Zeitraum>
+}
+
+enum Wiederholung {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
 }
 
 class Zeitraum {
-- startzeit : datetime
-- endzeit : datetime
-+ getstartzeit()
-+ getendzeit()
+  - startZeit : LocalDateTime
+  - endZeit : LocalDateTime
+  - wiederholung : Wiederholung
+  + ueberschneidetSich(mit : Zeitraum) : boolean
 }
 
-enum Skills{
+enum Skills {
   informatik
   elektrik
   maschienenbau
@@ -75,86 +92,36 @@ class Benachrichtigung {
   + markierenAlsGelesen()
 }
 
-enum Reapeating {
-  DAILY
-  WEEKLY
-  MONTHLY
-  YEARLY
-}
-
-class Zeitraum {
-  - startZeit: localeDateTime
-  - endZeit: localDateTime
-  - repeating: Reapeating
-  + ueberschneidung(): boolean
-}
-
 class Kalender {
-  - List<Zeitraum>
+  - zeitraeume : List<Zeitraum>
+  + addZeitraum(z : Zeitraum)
+  + removeZeitraum(z : Zeitraum)
 }
 
+User "1" -- "1" Kalender
 User "1" -- "*" Benachrichtigung
 
 class Gui {
   - currentUser: User
-  - zuordnungsService: ZuordnungsService
   + start()
-  + navigateTo(viewName: String)
+  + navigateTo(view: View)
 }
-
-class GesuchListeView {
-  + ladeGesuche()
-  + filtereGesuche()
-  + zeigeDetails(id)
-}
-
-class GesuchDetailView {
-  - aktuellesGesuch: Hilfsgesuch
-  + anzeigen()
-  + bewerben()
-  + bearbeiten()
-}
-
-class AngebotErstellenView {
-  + eingabenValidieren()
-  + angebotAbsenden()
-}
-
-class DashboardView {
-  + zeigeMeineGesuche()
-  + zeigeMeineAngebote()
-}
-
-class BenachrichtigungsView {
-  + ladeBenachrichtigungen()
-}
-
-class ProfilView {
-  + anzeigen()
-  + bearbeiten()
-}
-
-Gui --> GesuchListeView
-Gui --> DashboardView
-Gui --> BenachrichtigungsView
-Gui --> ProfilView
-GesuchListeView --> GesuchDetailView
-GesuchDetailView --> AngebotErstellenView
 
 class ZuordnungsService {
   - angebote : List<Hilfsangebot>
   - gesuche : List<Hilfsgesuch>
   + match(gesuch: Hilfsgesuch)
   + match(angebot: Hilfsangebot)
-  + weiseHelferZu()
+  + weiseHelferZu(gesuch : Hilfsgesuch, angebot: Hilfsangebot) : boolean
   + faehigkeitenMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
   + ortRadiusMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch, radiusKm: double): boolean
   + zeitMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
   + berechneDistanz(a1: Adresse, a2: Adresse): double
 }
 
-Gui --> ZuordnungsService
+Gui -- ZuordnungsService
 ZuordnungsService --> Hilfsgesuch
 ZuordnungsService --> Hilfsangebot
+Gui "1" --> "*" View
 
 @enduml
