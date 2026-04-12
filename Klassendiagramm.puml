@@ -22,8 +22,8 @@ class Helfer {
 }
 
 class Suchender {
-  organisation : String
-  gesuche : Hilfsgesuch[]
+  - organisation : String
+  - gesuche : Hilfsgesuch[]
   + gesuchErstellen()
   + benachrichtigungVerschicken()
   + helferAnnehmen()
