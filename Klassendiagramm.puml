@@ -1,21 +1,48 @@
 @startuml
 
 class User {
-  - id : String
+  - userId : String
   - name : String
   - email : String
   - adresse : Adresse
+  - passwort : String
+  + profilErstellen()
+  + profilBearbeiten()
+  + profilLöschen()
+  + userMelden(userId : String): Report
 }
 
-class Benutzer {
-- skills : Skill[]
-+ profilBearbeiten()
-+ profilLöschen()
+class Helfer {
+  - aktuelleTeilnahmen : Hilfsgesuch[]
+  - erreichbarkeitsZeitraum : Kalender
+  - skills : Skill[]
+  + aufGesuchBewerben(gesuchID : String)
+  + zeitraumAnpassen()
+  + teilnahmeZurückziehen()
+}
+
+class Suchender {
+  organisation : String
+  gesuche : Hilfsgesuch[]
+  + gesuchErstellen()
+  + benachrichtigungVerschicken()
+  + helferAnnehmen()
+  + helferAblehnen()
 }
 
 class Admin {
-- rechte : Rechte[]
-+ nutzerBannen(id : String)
+  - gemeldeteInhalte : Report[]
+  - rechte : Rechte[]
+  + nutzerSperren(userID : String)
+  + nutzerEntsperren(userID : String)
+}
+
+class Report {
+  - reportId : String
+  - reportedUserId : String
+  - grund : String
+  - details : String
+  - erstelltAm : DateTime
 }
 
 enum Rechte {
@@ -24,7 +51,8 @@ enum Rechte {
   INHALTSMODERATION
 }
 
-User <|-- Benutzer
+User <|-- Helfer
+User <|-- Suchender
 User <|-- Admin
 
 class Adresse {
@@ -45,6 +73,7 @@ enum Status {
 }
 
 class Hilfsgesuch {
+  - gesuchID : String
   - anzahlGesuchteHelfer : int
   - helferListe : List<Benutzer>
   - adresse: Adresse
