@@ -8,14 +8,14 @@ class User {
   - passwort : String
   + profilErstellen(email : String, passwort : String):boolean
   + profilBearbeiten():boolean
-  + profilLöschen():boolean
-  + userMelden(userId : String): Report
+  + profilLoeschen():boolean
+  + userMelden(userId : String, grund : String) : Report
 }
 
 class Helfer {
-  - aktuelleTeilnahmen : Hilfsgesuch[]
+  - aktuelleTeilnahmen : List<Hilfsangebot>
   - erreichbarkeitsZeitraum : Kalender
-  - skills : Skills[]
+  - skills : List<Skills>
   + aufGesuchBewerben(gesuchID : String): boolean
   + zeitraumAnpassen():boolean
   + teilnahmeZurückziehen():boolean
@@ -23,30 +23,29 @@ class Helfer {
 
 class Suchender {
   - organisation : String
-  - gesuche : Hilfsgesuch[]
+  - gesuche : List<Hilfsgesuch>
   + gesuchErstellen(beschreibung : String, anzahlGesuchteHelfer : int):Hilfsgesuch
-  + benachrichtigungVerschicken(nachricht : String):Benachrichtigung
+  + benachrichtigungVerschicken(nachricht : String): boolean
   + helferAnnehmen():boolean
   + helferAblehnen():boolean
 }
 
 class Admin {
-  - gemeldeteInhalte : Report[]
-  - rechte : Rechte[]
+  - gemeldeteInhalte : List<Report>
+  - rechte : List<Rechte>
   + nutzerSperren(userID : String):boolean
   + nutzerEntsperren(userID : String):boolean
 }
 
 class Report {
   - reportId : String
-  - reportedUserId : String
   - grund : String
   - details : String
   - erstelltAm : DateTime
 }
 
-Report --> User : gemeldeter
-Report --> User : meldender
+User "1" <-- "0..*" Report : melder
+User "1" <-- "0..*" Report : gemeldet 
 
 enum Rechte {
   USERERWALTUNG
@@ -94,14 +93,14 @@ class Hilfsgesuch {
   + isFilled() : boolean
 }
 
-Suchender "1" -- "*" Hilfsgesuch
+Suchender "1" o-- "0..*" Hilfsgesuch
 HilfeEintrag <|-- Hilfsgesuch
 
 class Hilfsangebot {
   - helfer : Helfer
 }
 
-Helfer "1" -- "*" Hilfsangebot
+Helfer "1" -- "0..*" Hilfsangebot
 HilfeEintrag <|-- Hilfsangebot
 
 enum Wiederholung {
@@ -117,6 +116,9 @@ class Zeitraum {
   - wiederholung : Wiederholung
   + ueberschneidetSich(mit : Zeitraum) : boolean
 }
+
+Zeitraum "*" --o "1" HilfeEintrag
+Zeitraum "*" --o "1" Kalender
 
 enum Skills {
   TRAGEN_HEBEN
@@ -134,13 +136,17 @@ enum Skills {
   KOORDINATION_UNTERSTUETZUNG
 }
 
+
 class Benachrichtigung {
-  - id: UUID
-  - nachricht: String
-  - gelesen: boolean
+  - id : UUID
+  - nachricht : String
+  - gelesen : boolean
   + senden()
   + markierenAlsGelesen()
 }
+
+User "1" <-- "0..*" Benachrichtigung : empfaenger
+User "1" <-- "0..*" Benachrichtigung : sender
 
 class Kalender {
   - zeitraeume : List<Zeitraum>
@@ -149,7 +155,6 @@ class Kalender {
 }
 
 User "1" -- "1" Kalender
-User "1" -- "*" Benachrichtigung
 
 class Gui {
   - currentUser: User
@@ -160,14 +165,16 @@ class Gui {
 class ZuordnungsService {
   - angebote : List<Hilfsangebot>
   - gesuche : List<Hilfsgesuch>
-  + match(gesuch: Hilfsgesuch) : Hilfsangebot[]
-  + match(angebot: Hilfsangebot) : Hilfsgesuch[]
+  + match(gesuch: Hilfsgesuch) : List<Hilfsangebot>
+  + match(angebot: Hilfsangebot) : List<Hilfsgesuch>
   + weiseHelferZu(gesuch : Hilfsgesuch, angebot: Hilfsangebot) : boolean
   + faehigkeitenMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
   + ortRadiusMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch, radiusKm: double): boolean
   + zeitMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
   + berechneDistanz(a1: Adresse, a2: Adresse): double
 }
+
+class View
 
 Gui -- ZuordnungsService
 ZuordnungsService --> Hilfsgesuch
