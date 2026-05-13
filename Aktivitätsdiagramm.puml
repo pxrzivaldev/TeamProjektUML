@@ -1,0 +1,51 @@
+@startuml Aktivitätsdiagramm
+
+start
+
+:App öffnen;
+
+repeat :Login Daten eingeben;
+  backward :Fehlermeldung zeigen;
+repeat while (Anmeldedaten gültig?) is (nein) not (ja)
+
+while (Aktion wählen?) is (Profil bearbeiten)
+  :Profil öffnen;
+  :Daten bearbeiten;
+  :Profil speichern;
+endwhile (Gesuch erstellen)
+
+:Neues Gesuch anlegen;  
+
+repeat
+
+  fork
+    :Beschreibung eingeben;
+  fork again
+    :Zeitraum festlegen;
+  fork again
+    :Einsatzort angeben;
+  end fork
+
+  repeat :Skill auswählen;
+    :Personenanzahl angeben;
+  repeat while (Weitere Skills?) is (ja) not (nein)
+
+  :Eingaben prüfen;
+
+backward :Korrektur nötig;
+repeat while (Alles ok?) is (nein) not (ja)
+
+if (Entwurf Speichern oder Veröffentlichen?) then (Entwurf)
+  :Als Entwurfs peichern;
+else (Veröffentlichen)
+  :Gesuch veröffentlichen;
+  :In Datenbank speichern;
+  :Passende Helfer matchen;
+  :Bestätigung;
+endif
+
+:Dashboard anzeigen;
+
+stop
+
+@enduml
