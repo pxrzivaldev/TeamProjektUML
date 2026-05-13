@@ -6,47 +6,49 @@ class User {
   - email : String
   - adresse : Adresse
   - passwort : String
-  + profilErstellen()
-  + profilBearbeiten()
-  + profilLöschen()
-  + userMelden(userId : String): Report
+  + profilErstellen(email : String, passwort : String):boolean
+  + profilBearbeiten():boolean
+  + profilLoeschen():boolean
+  + userMelden(userId : String, grund : String) : Report
 }
 
 class Helfer {
-  - aktuelleTeilnahmen : Hilfsgesuch[]
+  - aktuelleTeilnahmen : List<Hilfsangebot>
   - erreichbarkeitsZeitraum : Kalender
-  - skills : Skill[]
-  + aufGesuchBewerben(gesuchID : String)
-  + zeitraumAnpassen()
-  + teilnahmeZurückziehen()
+  - skills : List<Skills>
+  + aufGesuchBewerben(gesuchID : String): boolean
+  + zeitraumAnpassen():boolean
+  + teilnahmeZurückziehen():boolean
 }
 
 class Suchender {
   - organisation : String
-  - gesuche : Hilfsgesuch[]
-  + gesuchErstellen()
-  + benachrichtigungVerschicken()
-  + helferAnnehmen()
-  + helferAblehnen()
+  - gesuche : List<Hilfsgesuch>
+  + gesuchErstellen(beschreibung : String, anzahlGesuchteHelfer : int):Hilfsgesuch
+  + benachrichtigungVerschicken(nachricht : String): boolean
+  + helferAnnehmen():boolean
+  + helferAblehnen():boolean
 }
 
 class Admin {
-  - gemeldeteInhalte : Report[]
-  - rechte : Rechte[]
-  + nutzerSperren(userID : String)
-  + nutzerEntsperren(userID : String)
+  - gemeldeteInhalte : List<Report>
+  - rechte : List<Rechte>
+  + nutzerSperren(userID : String):boolean
+  + nutzerEntsperren(userID : String):boolean
 }
 
 class Report {
   - reportId : String
-  - reportedUserId : String
   - grund : String
   - details : String
   - erstelltAm : DateTime
 }
 
+User "1" <-- "0..*" Report : melder
+User "1" <-- "0..*" Report : gemeldet 
+
 enum Rechte {
-  BENUTZERVERWALTUNG
+  USERERWALTUNG
   ROLLENVERWALTUNG
   INHALTSMODERATION
 }
@@ -72,25 +74,34 @@ enum Status {
   ABGEBROCHEN
 }
 
+abstract class HilfeEintrag {
+  - id : String
+  - zeitraeume : List<Zeitraum>
+  - adresse : Adresse
+  - skills : List<Skills>
+  + addZeitraum(zeitraum : Zeitraum) : boolean
+  + removeZeitraum(zeitraum : Zeitraum): boolean
+}
+
 class Hilfsgesuch {
-  - gesuchID : String
+  - beschreibung : String
   - anzahlGesuchteHelfer : int
-  - helferListe : List<Benutzer>
-  - adresse: Adresse
+  - helferListe : List<Helfer>
   - status : Status
-  + addHelfer(helfer : Benutzer) : boolean
+  + addHelfer(helfer : Helfer) : boolean
   + getStatus() : Status
   + isFilled() : boolean
 }
 
+Suchender "1" o-- "0..*" Hilfsgesuch
+HilfeEintrag <|-- Hilfsgesuch
+
 class Hilfsangebot {
-  - zeitraeume : List<Zeitraum>
-  - user : User
-  - skills : List<Skills>
-  + addZeitraum(zeitraum : Zeitraum) : boolean
-  + removeZeitraum(zeitraum : Zeitraum): boolean
-  + getAlleZeitraeume() : List<Zeitraum>
+  - helfer : Helfer
 }
+
+Helfer "1" -- "0..*" Hilfsangebot
+HilfeEintrag <|-- Hilfsangebot
 
 enum Wiederholung {
   DAILY
@@ -106,20 +117,36 @@ class Zeitraum {
   + ueberschneidetSich(mit : Zeitraum) : boolean
 }
 
+Zeitraum "*" --o "1" HilfeEintrag
+Zeitraum "*" --o "1" Kalender
+
 enum Skills {
-  informatik
-  elektrik
-  maschienenbau
-  stärke
+  TRAGEN_HEBEN
+  AUFRAEUMARBEITEN
+  TECHNISCHE_HILFE
+  STROMVERSORGUNG
+  PUMPEN_BEDIENEN
+  MATERIALVERTEILUNG
+  TRANSPORT
+  ERSTE_HILFE
+  SANITAETSDIENST
+  BETREUUNG_VON_PERSONEN
+  UNTERKUNFTSBETRIEB
+  FUNK_KOMMUNIKATION
+  KOORDINATION_UNTERSTUETZUNG
 }
 
+
 class Benachrichtigung {
-  - id: UUID
-  - nachricht: String
-  - gelesen: boolean
+  - id : UUID
+  - nachricht : String
+  - gelesen : boolean
   + senden()
   + markierenAlsGelesen()
 }
+
+User "1" <-- "0..*" Benachrichtigung : empfaenger
+User "1" <-- "0..*" Benachrichtigung : sender
 
 class Kalender {
   - zeitraeume : List<Zeitraum>
@@ -128,7 +155,6 @@ class Kalender {
 }
 
 User "1" -- "1" Kalender
-User "1" -- "*" Benachrichtigung
 
 class Gui {
   - currentUser: User
@@ -139,14 +165,16 @@ class Gui {
 class ZuordnungsService {
   - angebote : List<Hilfsangebot>
   - gesuche : List<Hilfsgesuch>
-  + match(gesuch: Hilfsgesuch)
-  + match(angebot: Hilfsangebot)
+  + match(gesuch: Hilfsgesuch) : List<Hilfsangebot>
+  + match(angebot: Hilfsangebot) : List<Hilfsgesuch>
   + weiseHelferZu(gesuch : Hilfsgesuch, angebot: Hilfsangebot) : boolean
   + faehigkeitenMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
   + ortRadiusMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch, radiusKm: double): boolean
   + zeitMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
   + berechneDistanz(a1: Adresse, a2: Adresse): double
 }
+
+class View
 
 Gui -- ZuordnungsService
 ZuordnungsService --> Hilfsgesuch
