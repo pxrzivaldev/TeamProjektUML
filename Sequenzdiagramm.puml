@@ -1,0 +1,96 @@
+@startuml Hilfsangebot
+
+title Erstellung eines Hilfsangebots 
+
+autoactivate on
+
+actor "Helfer" as User
+participant "App" as App
+database "User-Profil" as Profile
+database "Hilfsangebote" as Offers
+database "Hilfsgesuche Unternehmen" as Requests
+participant "Matching-Service" as Matching
+
+== Profil verwalten ==
+
+User -> App : Profil bearbeiten
+activate App
+
+App -> Profile : Allgemeine Daten speichern\n(Name, Geburtsdatum)
+activate Profile
+Profile --> App : gespeichert
+deactivate Profile
+
+App -> Profile : Generelle Skills speichern\n(z.B. Informatikkenntnisse)
+activate Profile
+Profile --> App : Skills gespeichert
+deactivate Profile
+
+App --> User : Profil gespeichert
+deactivate App
+
+== Hilfsangebot erstellen ==
+
+User -> App : Neues Hilfsangebot erstellen
+activate App
+
+User -> App : Zeitraum angeben
+
+App -> Profile : Generelle Skills abrufen
+activate Profile
+Profile --> App : Skills zurückgeben
+deactivate Profile
+
+App --> User : Skills anzeigen
+
+opt Angebotsspezifische Skills hinzufügen
+    User -> App : Zusätzliche Skills angeben\n(z.B. Auto verfügbar)
+end
+
+App -> Offers : Hilfsangebot speichern
+activate Offers
+Offers --> App : Angebot gespeichert
+deactivate Offers
+
+== Matching-Prozess ==
+
+App -> Matching : Matching starten
+activate Matching
+
+Matching -> Offers : Angebote abrufen
+activate Offers
+Offers --> Matching : Angebote
+deactivate Offers
+
+Matching -> Requests : Passende Gesuche suchen
+activate Requests
+Requests --> Matching : Trefferliste
+deactivate Requests
+
+Matching --> App : Match-Ergebnisse
+deactivate Matching
+
+== Vorschläge für den User ==
+
+App --> User : Passende Hilfsgesuche anzeigen
+
+alt User nimmt Vorschlag an
+
+    User -> App : Hilfsgesuch annehmen
+
+    App -> Requests : Status aktualisieren
+    activate Requests
+    Requests --> App : Gesuch reserviert
+    deactivate Requests
+
+    App --> User : Bestätigung anzeigen
+
+else User lehnt ab
+
+    User -> App : Vorschlag ignorieren
+
+end
+
+deactivate App
+
+@enduml
