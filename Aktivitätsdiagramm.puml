@@ -32,7 +32,6 @@ repeat
 
   :Eingaben prüfen;
 
-backward :Korrektur nötig;
 repeat while (Alles ok?) is (nein) not (ja)
 
 if (Entwurf Speichern oder Veröffentlichen?) then (Entwurf)
