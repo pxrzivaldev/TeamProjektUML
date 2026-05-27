@@ -23,7 +23,6 @@ class Helfer {
   + gesuchAnnehmen(gesuchID : String) : boolean
   + gesuchAblehnen(gesuchID : String) : boolean
   + aufGesuchBewerben(gesuchID : String) : boolean
-
 }
 
 class Suchender {
@@ -107,7 +106,6 @@ HilfeEintrag <|-- Hilfsgesuch
 
 class Hilfsangebot {
   - helfer : Helfer
-  - angebotsspezifischeSkills : List<Skills> 
   + getKombinierteSkills() : List<Skills>
 }
 
