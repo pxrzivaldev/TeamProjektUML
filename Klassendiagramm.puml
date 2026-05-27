@@ -15,14 +15,11 @@ class User {
 
 class Helfer {
   - aktuelleTeilnahmen : List<Hilfsangebot>
-  - erreichbarkeitsZeitraum : Kalender
   - skills : List<Skills>
-  + aufGesuchBewerben(gesuchID : String) : boolean
-  + zeitraumAnpassen() : boolean
+  + angebotErstellem(zeitraeume : Kalender) : boolean
   + teilnahmeZurückziehen() : boolean
   + gesuchAnnehmen(gesuchID : String) : boolean
   + gesuchAblehnen(gesuchID : String) : boolean
-  + aufGesuchBewerben(gesuchID : String) : boolean
 }
 
 class Suchender {
@@ -82,7 +79,7 @@ enum Status {
 
 abstract class HilfeEintrag {
   - id : String
-  - zeitraeume : List<Zeitraum>
+  - zeitraeume : Kalender
   - adresse : Adresse
   - skills : List<Skills>
   + addZeitraum(zeitraum : Zeitraum) : boolean
@@ -106,6 +103,7 @@ HilfeEintrag <|-- Hilfsgesuch
 
 class Hilfsangebot {
   - helfer : Helfer
+  + aufGesuchBewerben(gesuchID : String) : boolean
   + getKombinierteSkills() : List<Skills>
 }
 
@@ -126,7 +124,6 @@ class Zeitraum {
   + ueberschneidetSich(mit : Zeitraum) : boolean
 }
 
-Zeitraum "*" --o "1" HilfeEintrag
 Zeitraum "*" --o "1" Kalender
 
 enum Skills {
