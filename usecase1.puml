@@ -3,18 +3,23 @@
 :Suchender:
 :Helfer:
 :Admin:
+:User:
+
+User <|-- Suchender
+User <|-- Helfer
+User <|-- Admin
 
 left to right direction
 
 rectangle FreiwilligenKoordinierung {
 
-    Suchender ---> (Anzeige erstellen)
-    Suchender ---> (Benachrichtigungen erhalten)
-    Helfer --> (Benachrichtigungen erhalten)
-    Helfer --> (Profil verwalten)
-    Helfer --> (Anfrage zusagen)
+    User --> (Benachrichtigungen erhalten)
+    User --> (Profil verwalten)
+    Suchender ---> (Gesuch erstellen)
+    Helfer --> (Angebot erstellen)
 
-    (Anzeige erstellen) --> (Helfer anfragen):<<include>>
+    (Gesuch erstellen) <-- (Angebot/Gesuch match finden):<<extend>>
+    (Angebot erstellen) <-- (Angebot/Gesuch match finden):<<extend>>
 
     Admin --> (Nutzer verwalten)
     Admin --> (Inhalte moderieren)
