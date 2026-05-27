@@ -1,6 +1,6 @@
 @startuml Aktivitätsdiagramm
 
-|Benutzer|
+|Helfer|
 start
 :App öffnen;
 
@@ -10,13 +10,13 @@ repeat
   backward :Fehlermeldung zeigen;
 repeat while (Anmeldedaten gültig?) is (nein) not (ja)
 
-|Benutzer|
+|Helfer|
 while (Aktion wählen?) is (Profil bearbeiten)
   :Profil öffnen;
   :Daten bearbeiten;
 |App|
   :Profil speichern;
-|Benutzer|
+|Helfer|
 endwhile (Gesuch erstellen)
 
 :Neues Gesuch anlegen;
@@ -40,10 +40,10 @@ repeat
   :Eingaben prüfen;
 repeat while (Alles ok?) is (nein) not (ja)
 
-|Benutzer|
+|Helfer|
 if (Entwurf oder Veröffentlichen?) then (Entwurf)
   :Als Entwurf speichern;
-|Benutzer|
+|Helfer|
 else (Veröffentlichen)
   :Gesuch veröffentlichen;
 |App|
