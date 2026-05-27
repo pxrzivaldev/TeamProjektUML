@@ -3,12 +3,13 @@
 class User {
   - userId : String
   - name : String
+  - geburtsdatum : LocalDate
   - email : String
   - adresse : Adresse
   - passwort : String
-  + profilErstellen(email : String, passwort : String):boolean
-  + profilBearbeiten():boolean
-  + profilLoeschen():boolean
+  + profilErstellen(email : String, passwort : String) : boolean
+  + profilBearbeiten() : boolean
+  + profilLoeschen() : boolean
   + userMelden(userId : String, grund : String) : Report
 }
 
@@ -16,25 +17,29 @@ class Helfer {
   - aktuelleTeilnahmen : List<Hilfsangebot>
   - erreichbarkeitsZeitraum : Kalender
   - skills : List<Skills>
-  + aufGesuchBewerben(gesuchID : String): boolean
-  + zeitraumAnpassen():boolean
-  + teilnahmeZurückziehen():boolean
+  + aufGesuchBewerben(gesuchID : String) : boolean
+  + zeitraumAnpassen() : boolean
+  + teilnahmeZurückziehen() : boolean
+  + gesuchAnnehmen(gesuchID : String) : boolean
+  + gesuchAblehnen(gesuchID : String) : boolean
+  + aufGesuchBewerben(gesuchID : String) : boolean
+
 }
 
 class Suchender {
   - organisation : String
   - gesuche : List<Hilfsgesuch>
-  + gesuchErstellen(beschreibung : String, anzahlGesuchteHelfer : int):Hilfsgesuch
-  + benachrichtigungVerschicken(nachricht : String): boolean
-  + helferAnnehmen():boolean
-  + helferAblehnen():boolean
+  + gesuchErstellen(beschreibung : String, anzahlGesuchteHelfer : int) : Hilfsgesuch
+  + benachrichtigungVerschicken(nachricht : String) : boolean
+  + helferAnnehmen() : boolean
+  + helferAblehnen() : boolean
 }
 
 class Admin {
   - gemeldeteInhalte : List<Report>
   - rechte : List<Rechte>
-  + nutzerSperren(userID : String):boolean
-  + nutzerEntsperren(userID : String):boolean
+  + nutzerSperren(userID : String) : boolean
+  + nutzerEntsperren(userID : String) : boolean
 }
 
 class Report {
@@ -45,10 +50,10 @@ class Report {
 }
 
 User "1" <-- "0..*" Report : melder
-User "1" <-- "0..*" Report : gemeldet 
+User "1" <-- "0..*" Report : gemeldet
 
 enum Rechte {
-  USERERWALTUNG
+  USERVERWALTUNG
   ROLLENVERWALTUNG
   INHALTSMODERATION
 }
@@ -68,7 +73,9 @@ class Adresse {
 }
 
 enum Status {
+  ENTWURF
   OFFEN
+  RESERVIERT
   IN_BEARBEITUNG
   ERFUELLT
   ABGEBROCHEN
@@ -80,7 +87,7 @@ abstract class HilfeEintrag {
   - adresse : Adresse
   - skills : List<Skills>
   + addZeitraum(zeitraum : Zeitraum) : boolean
-  + removeZeitraum(zeitraum : Zeitraum): boolean
+  + removeZeitraum(zeitraum : Zeitraum) : boolean
 }
 
 class Hilfsgesuch {
@@ -91,6 +98,8 @@ class Hilfsgesuch {
   + addHelfer(helfer : Helfer) : boolean
   + getStatus() : Status
   + isFilled() : boolean
+  + veroeffentlichen() : boolean
+  + alsEntwurfSpeichern() : boolean
 }
 
 Suchender "1" o-- "0..*" Hilfsgesuch
@@ -98,6 +107,8 @@ HilfeEintrag <|-- Hilfsgesuch
 
 class Hilfsangebot {
   - helfer : Helfer
+  - angebotsspezifischeSkills : List<Skills> 
+  + getKombinierteSkills() : List<Skills>
 }
 
 Helfer "1" -- "0..*" Hilfsangebot
@@ -136,7 +147,6 @@ enum Skills {
   KOORDINATION_UNTERSTUETZUNG
 }
 
-
 class Benachrichtigung {
   - id : UUID
   - nachricht : String
@@ -157,21 +167,22 @@ class Kalender {
 User "1" -- "1" Kalender
 
 class Gui {
-  - currentUser: User
+  - currentUser : User
   + start()
-  + navigateTo(view: View)
+  + navigateTo(view : View)
 }
 
 class ZuordnungsService {
   - angebote : List<Hilfsangebot>
   - gesuche : List<Hilfsgesuch>
-  + match(gesuch: Hilfsgesuch) : List<Hilfsangebot>
-  + match(angebot: Hilfsangebot) : List<Hilfsgesuch>
-  + weiseHelferZu(gesuch : Hilfsgesuch, angebot: Hilfsangebot) : boolean
-  + faehigkeitenMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
-  + ortRadiusMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch, radiusKm: double): boolean
-  + zeitMatch(angebot: Hilfsangebot, gesuch: Hilfsgesuch): boolean
-  + berechneDistanz(a1: Adresse, a2: Adresse): double
+  + match(gesuch : Hilfsgesuch) : List<Hilfsangebot>
+  + match(angebot : Hilfsangebot) : List<Hilfsgesuch>
+  + weiseHelferZu(gesuch : Hilfsgesuch, angebot : Hilfsangebot) : boolean
+  + faehigkeitenMatch(angebot : Hilfsangebot, gesuch : Hilfsgesuch) : boolean
+  + ortRadiusMatch(angebot : Hilfsangebot, gesuch : Hilfsgesuch, radiusKm : double) : boolean
+  + zeitMatch(angebot : Hilfsangebot, gesuch : Hilfsgesuch) : boolean
+  + berechneDistanz(a1 : Adresse, a2 : Adresse) : double
+  + aktualisierStatus(gesuch : Hilfsgesuch, status : Status) : boolean
 }
 
 class View
