@@ -1,0 +1,47 @@
+@startuml User_Melden_Bannen
+
+title User-, Melde- und Bann-Prozess
+
+state "User" as User {
+
+  [*] --> Aktiv : profilErstellen()
+
+  Aktiv --> VorübergehendGesperrt : VerstossBestaetigtigen\n/ nutzerSperren(userId)
+
+  Aktiv --> VorübergehendGesperrt : DirektSperren\n/ nutzerSperren(userId)
+
+  VorübergehendGesperrt --> Entsperrung_Ausstehend : EntsperrungBeantragen
+
+  Aktiv --> PermanentGesperrt : weitererVerstoss \n[wiederholteVerstoesse]
+
+  Entsperrung_Ausstehend --> Aktiv : EntsperrungGenemigt \n [benachrichtigungZugestellt] \n/ senden()
+
+  Entsperrung_Ausstehend --> VorübergehendGesperrt : EntsperrungAbgelehnt
+
+  Aktiv --> Geloescht : profilLoeschen()
+
+  PermanentGesperrt --> Geloescht : profilLoeschen()
+
+  Geloescht --> [*]
+
+}
+
+state "Report" as Report {
+
+  [*] --> Offen : userMelden(userId, grund)
+
+  Offen --> In_Bearbeitung : reportÜbernehmen()\n[adminHatModerationsrechte]
+
+  In_Bearbeitung --> Bestätigt : verstossBestaetigen()
+
+  In_Bearbeitung --> Abgelehnt : verstossAblehnen()\n/ benachrichtigungSenden()
+
+  Bestätigt --> Archiviert : reportArchivieren()
+
+  Abgelehnt --> Archiviert : reportArchivieren()
+
+  Archiviert --> [*]
+
+}
+
+@enduml
