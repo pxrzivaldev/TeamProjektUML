@@ -18,8 +18,8 @@ rectangle FreiwilligenKoordinierung {
     Suchender ---> (Gesuch erstellen)
     Helfer --> (Angebot erstellen)
 
-    (Gesuch erstellen) <-- (Angebot/Gesuch match finden):<<extend>>
-    (Angebot erstellen) <-- (Angebot/Gesuch match finden):<<extend>>
+    (Gesuch erstellen) --> (Angebot/Gesuch match finden):<<includes>>
+    (Angebot erstellen) --> (Angebot/Gesuch match finden):<<includes>>
 
     Admin --> (Nutzer verwalten)
     Admin --> (Inhalte moderieren)
