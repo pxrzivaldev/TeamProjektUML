@@ -98,7 +98,7 @@ class Hilfsgesuch {
   + alsEntwurfSpeichern() : boolean
 }
 
-Suchender "1" o-- "0..*" Hilfsgesuch
+Suchender "1" *-- "0..*" Hilfsgesuch
 HilfeEintrag <|-- Hilfsgesuch
 
 class Hilfsangebot {
@@ -107,7 +107,7 @@ class Hilfsangebot {
   + getKombinierteSkills() : List<Skills>
 }
 
-Helfer "1" -- "0..*" Hilfsangebot
+Helfer "1" *-- "0..*" Hilfsangebot
 HilfeEintrag <|-- Hilfsangebot
 
 enum Wiederholung {
