@@ -81,21 +81,31 @@ abstract class HilfeEintrag {
   - id : String
   - zeitraeume : Kalender
   - adresse : Adresse
-  - skills : List<Skills>
   + addZeitraum(zeitraum : Zeitraum) : boolean
   + removeZeitraum(zeitraum : Zeitraum) : boolean
 }
 
 class Hilfsgesuch {
   - beschreibung : String
-  - anzahlGesuchteHelfer : int
   - helferListe : List<Helfer>
+  - skillBedarf : SkillBedarf
   - status : Status
   + addHelfer(helfer : Helfer) : boolean
   + getStatus() : Status
   + isFilled() : boolean
   + veroeffentlichen() : boolean
-  + alsEntwurfSpeichern() : boolean
+  + alsEntwurfSpeichern() : boolean+ 
+  + addSkillBedarf(skill : Skills, anzahl : int) : boolean
+  + removeSkillBedarf(skill : Skills) : boolean
+  + offenePlaetze(skill : Skills) : int
+}
+
+class SkillBedarf {
+  - skill : Skills
+  - benoetigt : int
+  - besetzt : int
+  + offenePlaetze() : int
+  + istVollstaendigBesetzt() : boolean
 }
 
 Suchender "1" *-- "0..*" Hilfsgesuch
@@ -103,6 +113,7 @@ HilfeEintrag <|-- Hilfsgesuch
 
 class Hilfsangebot {
   - helfer : Helfer
+  - skills : List<Skills>
   + aufGesuchBewerben(gesuchID : String) : boolean
   + getKombinierteSkills() : List<Skills>
 }
