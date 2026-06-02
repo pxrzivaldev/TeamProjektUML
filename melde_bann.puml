@@ -11,6 +11,8 @@ state "User" as User {
   Aktiv --> VorübergehendGesperrt : DirektSperren\n/ nutzerSperren(userId)
 
   VorübergehendGesperrt --> Entsperrung_Ausstehend : EntsperrungBeantragen
+  
+  VorübergehendGesperrt --> Geloescht : profilLoeschen()
 
   Aktiv --> PermanentGesperrt : weitererVerstoss \n[wiederholteVerstoesse]
 
